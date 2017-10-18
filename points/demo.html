@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="../offline/v4.3.2/css/ol.css" type="text/css">
+    <style>
+      .map {
+        position: absolute;
+        left: 0%;
+        top: 0%;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script src="../offline/v4.3.2/build/ol.js" type="text/javascript"></script>
+    <title>MySQL + OpenLayers Example</title>
+  </head>
+  <body>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+      function styleFunction(feature) {
+        var style = new ol.style.Style({
+          image: new ol.style.Circle({
+            radius: 6,
+            stroke: new ol.style.Stroke({
+              color: 'white',
+              width: 2
+            }),
+            fill: new ol.style.Fill({
+              color: 'green'
+            })
+          })
+        });
+        return [style];
+      }
+
+      var queryLayer = new ol.layer.Vector({
+        title: 'Query results',
+        source: new ol.source.Vector({
+          url: 'points.php',
+          format: new ol.format.GeoJSON(),
+          projection: new ol.proj.Projection("EPSG:4326")
+      }),
+      style: styleFunction
+      });
+      
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM({
+              "url" : "../offline/tiles.php?z={z}&x={x}&y={y}&r=mapnik"
+            })
+          }),
+          queryLayer
+        ],
+        view: new ol.View({
+          center: ol.proj.fromLonLat([-6.2683, 53.3409]),
+          zoom: 5
+        })
+      });
+
+      function httpGetAsync(theUrl, callback)
+      {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+          callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+        xmlHttp.send(null);
+      }
+
+      function reloadMap() {
+        queryLayer.setSource(new ol.source.Vector({
+          url: 'points.php?' + Date.now(),
+          format: new ol.format.GeoJSON()
+        }));
+      }
+      
+      map.on('singleclick', function(evt) {
+        var lonlat = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+        if (evt.originalEvent.shiftKey) {
+          httpGetAsync('removepoint.php?lon=' + lonlat[0] + '&lat=' + lonlat[1], reloadMap);
+        } else {
+          httpGetAsync('addpoint.php?lon=' + lonlat[0] + '&lat=' + lonlat[1], reloadMap);
+        }
+      });
+    </script>
+  </body>
+</html>
