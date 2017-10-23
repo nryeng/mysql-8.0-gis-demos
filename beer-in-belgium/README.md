@@ -12,5 +12,5 @@ OpenStreetMap Belgium dataset (belgium-latest.osm), retrieved on
 December 26, 2014. It is licensed under the Open Data Commons Open
 Database License (ODbL).
 
-PHP scripts are copyright 2017 by Norvald H. Ryeng and eng and
-licensed under the UNLICENSE.
+PHP scripts are copyright 2017 by Norvald H. Ryeng and licensed under
+the UNLICENSE.
