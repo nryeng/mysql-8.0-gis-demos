@@ -13,3 +13,13 @@ public network.
 
 The code is under various licenses. See the README.md file in each
 directory for details.
+
+## Dependencies
+
+These demos assume MySQL Server 8.0. If you don't already have it, you can
+download it from https://dev.mysql.com/downloads/mysql/.
+
+The server side of these demos depend on a web server and PHP with mysqli and
+curl.
+
+On Ubuntu 17.10: ```sudo aptitude install apache2 php php-mysql php-curl```
