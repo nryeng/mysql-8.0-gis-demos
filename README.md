@@ -1,4 +1,4 @@
-# MySLQ 8.0 GIS Demos
+# MySQL 8.0 GIS Demos
 
 This repository contains various demos showing the MySQL 8.0 GIS
 support.
