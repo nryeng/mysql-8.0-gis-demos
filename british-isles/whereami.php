@@ -15,7 +15,7 @@ $db_password = 'demo';
 $db_schema = 'demo';
 
 $conn = new mysqli($db_host, $db_user, $db_password, $db_schema);
-$sql = "SELECT GROUP_CONCAT(name ORDER BY ST_Area(g) ASC SEPARATOR ', ') AS location FROM areas WHERE ST_Contains(g, ST_GeomFromText(?, 4326));";
+$sql = "SELECT GROUP_CONCAT(name ORDER BY ST_Area(ST_SRID(g, 0)) ASC SEPARATOR ', ') AS location FROM areas WHERE ST_Contains(g, ST_GeomFromText(?, 4326));";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('s', $wkt);
 $stmt->execute();
